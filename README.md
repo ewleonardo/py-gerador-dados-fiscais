@@ -11,6 +11,7 @@ Instale as bibliotecas necessárias com o comando abaixo:
 
 ```bash
 pip install pandas openpyxl faker
+```
 
 ---
 
