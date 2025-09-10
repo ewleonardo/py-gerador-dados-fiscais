@@ -6,14 +6,15 @@ import csv
 
 # --- Configurações do Usuário ---
 # NOME DO SEU ARQUIVO DE CNPJs
-ARQUIVO_CNPJS = 'cnpjs/cnpjs_ficticios.csv'
+ARQUIVO_CNPJS = '../cnpjs/cnpjs_ficticios.csv' # <--- CAMINHO CORRIGIDO
 
 # PERÍODO DAS TRANSAÇÕES
 MES = 8
 ANO = 2025
 meses = ['janeiro', 'fevereiro', 'marco', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro']
 
-ARQUIVO_SAIDA = f'dimp/dados/transacoes-{meses[MES-1]}-{ANO}.csv'
+# É uma boa prática ajustar a saída para ser relativa à pasta do script
+ARQUIVO_SAIDA = f'dados/transacoes-{meses[MES-1]}-{ANO}.csv'
 
 
 # PERFIS DE TRANSAÇÕES POR CNAE (MODIFICADO)
