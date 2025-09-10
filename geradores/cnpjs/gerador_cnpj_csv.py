@@ -87,6 +87,6 @@ for _ in range(300):
 
 # Criar o DataFrame e exportar para CSV
 df = pd.DataFrame(dados)
-df.to_csv('cnpjs/cnpjs_ficticios.csv', index=False, sep=';', encoding='utf-8')
+df.to_csv('cnpjs_ficticios.csv', index=False, sep=';', encoding='utf-8')
 
 print("Arquivo 'cnpjs_ficticios.csv' gerado com sucesso!")
