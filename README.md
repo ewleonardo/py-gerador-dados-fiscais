@@ -1,47 +1,81 @@
-# Geradores-Dados-Python
+## Geradores de Dados Fictícios para Análise Fiscal
 
-Este repositório contém scripts em Python para geração de dados fictícios. Os scripts são úteis para testes, desenvolvimento e preenchimento de bases de dados.
+Este projeto é um conjunto de scripts em Python para gerar dados fictícios e interconectados de CNPJs, transações DIMP, notas fiscais e declarações PGDAS. O objetivo é criar um dataset coerente para simular cenários de análise fiscal e auditoria.
 
 ---
 
-### Requisitos
+## Tabela de Conteúdo
+- [Tecnologias e Dependências](#tecnologias-e-dependências)
+- [Visão Geral do Fluxo de Dados](#visão-geral-do-fluxo-de-dados)
+- [Como Usar](#como-usar)
+- [Análise de Dados e Próximos Passos](#análise-de-dados-e-próximos-passos)
+- [Contribuição](#contribuição)
+- [Licença](#licença)
 
-Para usar os scripts, você precisa ter o **Python 3.6** ou superior.
-Instale as bibliotecas necessárias com o comando abaixo:
+---
+
+## Tecnologias e Dependências
+
+Este projeto foi desenvolvido em **Python**. As bibliotecas a seguir são necessárias e podem ser instaladas via pip:
 
 ```bash
-pip install pandas openpyxl faker
+pip install pandas faker numpy
 ```
 
 ---
 
-### Como Usar
+## Visão Geral do Fluxo de Dados
 
-#### 1. Gerador de CNPJs
-Este script (geradores/cnpjs/gerador_cnpj.py) cria um arquivo CSV chamado cnpjs_ficticios.csv com dados fictícios de empresas.
+Os scripts funcionam como um pipeline, onde a saída de um é a entrada do próximo. Isso garante a consistência e interligação dos dados gerados, simulando um ambiente de produção.
 
-Passo a passo:
-1. Navegue até a pasta do script:
-cd geradores/cnpjs
-2. Execute o script:
-python gerador_cnpj.py
-Saída: O arquivo cnpjs_ficticios.csv será criado na pasta geradores/cnpjs/.
+`CNPJ -> DIMP -> Notas Fiscais -> PGDAS`
 
 ---
 
-#### 2. Gerador de Transações DIMP
-Este script (geradores/dimp/gerador_dimp.py) cria um arquivo CSV de transações fictícias no formato DIMP. Ele **depende** do arquivo de CNPJs, então você deve rodar o primeiro script antes.
+## Como Usar
 
-Passo a passo:
-1. Navegue até a pasta do script:
-cd geradores/dimp
-2. Execute o script:
-python gerador_dimp.py
-Configuração: Você pode alterar o mês e o ano das transações diretamente no script, nas variáveis MES e ANO.
-Saída: O arquivo transacoes-MES-ANO.csv será criado na pasta geradores/dimp/dados/.
+#### 1. Gerar CNPJs
+Cria um arquivo CSV com 300 CNPJs base, que serão usados nos próximos passos.
+
+```bash
+python scripts/gerador_cnpj_csv.py
+```
+
+#### 2. Gerar Dados DIMP (Transações Financeiras)
+Lê a lista de CNPJs e gera um arquivo com transações financeiras simulando uma DIMP, com valores distribuídos por CNAE. **Lembre-se de ajustar o MÊS e o ANO no script**.
+
+```bash
+python scripts/gerador_dimp_csv.py
+```
+
+#### 3. Gerar Notas Fiscais de Serviço
+
+Usa os dados DIMP gerados no passo anterior para criar notas fiscais com valores que podem ter divergências, simulando cenários reais de auditoria. **Ajuste o MÊS e o ANO no script**.
+
+```bash
+python scripts/gerador_notas_xlsx.py
+```
+
+#### 4. Gerar PGDAS
+
+Consolida os dados das notas fiscais e DIMP para gerar um arquivo PGDAS, também com cenários de divergência. *Ajuste o MÊS e o ANO no script*.
+
+```bash
+python scripts/gerador_pgdas_txt.py
+```
 
 ---
 
-### Licença
+## Análise de Dados e Próximos Passos
 
-Este projeto está sob a Licença MIT.
+Agora que você tem os arquivos, o próximo passo é a análise! Você pode usar um script em Python (com bibliotecas como Pandas ou Polars) ou uma ferramenta de Business Intelligence (como PowerBI ou Tableau) para cruzar os dados de DIMP, Notas Fiscais e PGDAS para encontrar as divergências.
+
+---
+
+## Contribuição
+
+Contribuições são bem-vindas! Se tiver sugestões ou encontrar algum problema, sinta-se à vontade para abrir uma issue ou um pull request.
+
+---
+## Licença
+Este projeto está sob a Licença [MIT](https://choosealicense.com/licenses/mit/). Para mais detalhes, veja o arquivo `LICENSE`.

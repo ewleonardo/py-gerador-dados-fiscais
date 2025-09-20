@@ -1,6 +1,16 @@
+# Ignora arquivos gerados
 *.csv
 *.xlsx
+*.txt
+*.zip
+
+# Outros arquivos do projeto
 pycache/
 *.pyc
 venv/
 .env
+V1/
+
+# Mantém a pasta 'generated' no repositório, mas ignora o conteúdo
+data/generated/*
+!data/generated/.gitkeep

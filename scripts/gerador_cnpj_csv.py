@@ -2,11 +2,10 @@ import pandas as pd
 from faker import Faker
 import random
 from datetime import datetime, timedelta
+import os
 
-# Configurar o gerador de dados (Faker) para o Brasil
+# Configurações iniciais e perfis de negócios
 fake = Faker('pt_BR')
-
-# Mapear perfis de negócios com palavras-chave e CNAEs
 perfis_negocios = [
     {'tipo': 'Veterinária', 'palavras_chave': ['Pet', 'Animal', 'Saúde Animal'], 'cnae': '7500100', 'descricao_cnae': 'Atividades veterinárias'},
     {'tipo': 'Salão de Beleza', 'palavras_chave': ['Beleza', 'Estética', 'Salão', 'Cabelo & Corpo'], 'cnae': '9602502', 'descricao_cnae': 'Atividades de estética e outros serviços de cuidados com a beleza'},
@@ -17,8 +16,6 @@ perfis_negocios = [
     {'tipo': 'Restaurante', 'palavras_chave': ['Restaurante', 'Lanchonete', 'Alimentos', 'Sabores'], 'cnae': '5611201', 'descricao_cnae': 'Restaurantes e similares'},
     {'tipo': 'Comércio', 'palavras_chave': ['Comercial', 'Varejo', 'Atacadista'], 'cnae': '4711302', 'descricao_cnae': 'Comércio varejista de mercadorias em geral'},
     {'tipo': 'Transporte', 'palavras_chave': ['Transportes', 'Logística', 'Cargas'], 'cnae': '4930202', 'descricao_cnae': 'Transporte rodoviário de carga'},
-    
-    # NOVOS CNAEs
     {'tipo': 'Contabilidade', 'palavras_chave': ['Contábil', 'Escritório Contabilidade', 'Assessoria Fiscal'], 'cnae': '6920601', 'descricao_cnae': 'Atividades de contabilidade'},
     {'tipo': 'Consultoria', 'palavras_chave': ['Consultoria', 'Gestão', 'Estratégica', 'Negócios'], 'cnae': '7020400', 'descricao_cnae': 'Atividades de consultoria em gestão empresarial'},
     {'tipo': 'Engenharia/Construção', 'palavras_chave': ['Construção', 'Engenharia', 'Obras'], 'cnae': '4120400', 'descricao_cnae': 'Construção de edifícios'},
@@ -27,14 +24,13 @@ perfis_negocios = [
     {'tipo': 'E-commerce', 'palavras_chave': ['e-commerce', 'Online', 'Vendas Online', 'Comércio Digital'], 'cnae': '4713401', 'descricao_cnae': 'Lojas de departamentos ou magazines'}
 ]
 
-# Função para gerar um CNPJ fictício
+# Funções auxiliares para gerar dados fictícios
 def gerar_cnpj_ficticio():
     return fake.cnpj().replace('.', '').replace('/', '').replace('-', '')
 
 def gerar_nome_empresa(perfil):
     palavra_chave = random.choice(perfil['palavras_chave'])
     nome_socio = fake.first_name()
-    
     opcoes_nome = [
         f'{palavra_chave} {fake.last_name()} {random.choice(["LTDA", "S.A."])}',
         f'{nome_socio} {palavra_chave} {random.choice(["LTDA", "EIRELI"])}',
@@ -52,22 +48,17 @@ def gerar_simples_mei():
     mei = 'SIM' if simples == 'SIM' and random.random() < 0.3 else 'NÃO'
     return simples, mei
 
-# Lista para armazenar os dados
+# Geração dos registros de CNPJ
 dados = []
-
-# Gerar 300 registros
 for _ in range(300):
     cnpj_limpo = gerar_cnpj_ficticio()
     cnpj_formatado = f'{cnpj_limpo[:2]}.{cnpj_limpo[2:5]}.{cnpj_limpo[5:8]}/{cnpj_limpo[8:12]}-{cnpj_limpo[12:]}'
-    
     perfil = random.choice(perfis_negocios)
-    
     razao_social = gerar_nome_empresa(perfil)
     nome_fantasia = razao_social.replace(random.choice(["LTDA", "EIRELI", "S.A."]), "").strip()
     socio = fake.name()
     data_inicio = gerar_data_atividade()
     simples, mei = gerar_simples_mei()
-    
     registro = {
         'cpf_cnpj_clean': cnpj_limpo,
         'cpf_cnpj': cnpj_formatado,
@@ -85,8 +76,11 @@ for _ in range(300):
     }
     dados.append(registro)
 
-# Criar o DataFrame e exportar para CSV
+# Cria e salva o arquivo CSV
 df = pd.DataFrame(dados)
-df.to_csv('cnpjs_ficticios.csv', index=False, sep=';', encoding='utf-8')
-
-print("Arquivo 'cnpjs_ficticios.csv' gerado com sucesso!")
+PASTA_SAIDA = '../data/cnpjs'
+ARQUIVO_SAIDA = 'cnpjs_ficticios.csv'
+os.makedirs(PASTA_SAIDA, exist_ok=True)
+caminho_saida = os.path.join(PASTA_SAIDA, ARQUIVO_SAIDA)
+df.to_csv(caminho_saida, index=False, sep=';', encoding='utf-8')
+print(f"Arquivo '{caminho_saida}' gerado com sucesso!")
