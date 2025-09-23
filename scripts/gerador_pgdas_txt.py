@@ -3,10 +3,11 @@ from faker import Faker
 import random
 from datetime import datetime
 import os
+import zipfile
 
 # --- Configurações do Usuário ---
-MES_COMPETENCIA = 1
-ANO_COMPETENCIA = 2025
+MES_COMPETENCIA = 2
+ANO_COMPETENCIA = 2024
 meses = ['janeiro', 'fevereiro', 'marco', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro']
 
 # Caminhos dos arquivos de entrada
@@ -81,13 +82,20 @@ for _, row in df_merged.iterrows():
 records.append(f"ZZZZZ|{total_records}")
 
 PASTA_SAIDA = os.path.join('../data/generated', str(ANO_COMPETENCIA), 'pgdas')
-ARQUIVO_SAIDA = f'pgdas-{meses[MES_COMPETENCIA-1]}-{ANO_COMPETENCIA}.txt'
+ARQUIVO_TXT_SAIDA = f'pgdas-{meses[MES_COMPETENCIA-1]}-{ANO_COMPETENCIA}.txt'
+ARQUIVO_ZIP_SAIDA = f'pgdas-{meses[MES_COMPETENCIA-1]}-{ANO_COMPETENCIA}.zip'
 
 os.makedirs(PASTA_SAIDA, exist_ok=True)
 
-caminho_saida = os.path.join(PASTA_SAIDA, ARQUIVO_SAIDA)
-with open(caminho_saida, 'w', encoding='utf-8') as f:
+caminho_saida_txt = os.path.join(PASTA_SAIDA, ARQUIVO_TXT_SAIDA)
+with open(caminho_saida_txt, 'w', encoding='utf-8') as f:
     for line in records:
         f.write(line + '\n')
 
-print(f"Arquivo '{caminho_saida}' com {total_records} registros gerado com sucesso!")
+# Criar o arquivo ZIP
+caminho_saida_zip = os.path.join(PASTA_SAIDA, ARQUIVO_ZIP_SAIDA)
+with zipfile.ZipFile(caminho_saida_zip, 'w', zipfile.ZIP_DEFLATED) as zipf:
+    zipf.write(caminho_saida_txt, os.path.basename(caminho_saida_txt))
+
+print(f"Arquivo '{caminho_saida_txt}' com {total_records} registros gerado com sucesso!")
+print(f"Arquivo '{caminho_saida_zip}' gerado com sucesso!")

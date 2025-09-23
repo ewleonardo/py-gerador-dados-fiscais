@@ -19,50 +19,66 @@ Este projeto é um conjunto de scripts em Python para gerar dados fictícios e i
 Este projeto foi desenvolvido em **Python**. As bibliotecas a seguir são necessárias e podem ser instaladas via pip:
 
 ```bash
-pip install pandas faker numpy
+pip install pandas faker numpy openpyxl
 ```
 
 ---
 
 ## Visão Geral do Fluxo de Dados
 
-Os scripts funcionam como um pipeline, onde a saída de um é a entrada do próximo. Isso garante a consistência e interligação dos dados gerados, simulando um ambiente de produção.
+O projeto é estruturado como um pipeline, onde a saída de um script serve como entrada para o próximo, garantindo a consistência dos dados.
 
-`CNPJ -> DIMP -> Notas Fiscais -> PGDAS`
+```bash
+CNPJs -> DIMP -> Notas Fiscais -> PGDAS (TXT + ZIP)
+```
+
+O fluxo principal é orquestrado de forma automatizada, mas os scripts individuais também podem ser executados para cenários específicos.
 
 ---
 
 ## Como Usar
 
-#### 1. Gerar CNPJs
-Cria um arquivo CSV com 300 CNPJs base, que serão usados nos próximos passos.
+### Método Automatizado (Recomendado)
 
+O script `main.py` automatiza todo o processo de geração para um período de anos.
+
+#### 1.  Acesse o diretório `scripts`.
+```bash
+cd scripts
+```
+
+#### 2.  Execute o script principal.
+```bash
+python main.py
+```
+
+##### 3.  Insira o **ano inicial** e o **ano final** quando solicitado. O script irá gerar os CNPJs (uma única vez) e, em seguida, os arquivos DIMP, notas fiscais e PGDAS para cada mês do período.
+
+### Método Manual (Para cenários específicos)
+
+Para gerar dados de forma individual, siga os passos abaixo:
+
+#### 1.  **Gerar CNPJs**
 ```bash
 python scripts/gerador_cnpj_csv.py
 ```
 
-#### 2. Gerar Dados DIMP (Transações Financeiras)
-Lê a lista de CNPJs e gera um arquivo com transações financeiras simulando uma DIMP, com valores distribuídos por CNAE. **Lembre-se de ajustar o MÊS e o ANO no script**.
-
+#### 2.  **Gerar Dados DIMP (Transações Financeiras)**
 ```bash
 python scripts/gerador_dimp_csv.py
 ```
 
-#### 3. Gerar Notas Fiscais de Serviço
-
-Usa os dados DIMP gerados no passo anterior para criar notas fiscais com valores que podem ter divergências, simulando cenários reais de auditoria. **Ajuste o MÊS e o ANO no script**.
-
+#### 3.  **Gerar Notas Fiscais de Serviço**
 ```bash
 python scripts/gerador_notas_xlsx.py
 ```
 
-#### 4. Gerar PGDAS
-
-Consolida os dados das notas fiscais e DIMP para gerar um arquivo PGDAS, também com cenários de divergência. *Ajuste o MÊS e o ANO no script*.
-
+#### 4.  **Gerar PGDAS**
 ```bash
 python scripts/gerador_pgdas_txt.py
 ```
+
+**Observação:** Ao usar o método manual, lembre-se de ajustar o `MES_COMPETENCIA` e o `ANO_COMPETENCIA` em cada script.
 
 ---
 
