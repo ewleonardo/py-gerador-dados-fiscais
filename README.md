@@ -52,7 +52,7 @@ cd scripts
 python main.py
 ```
 
-##### 3.  Insira o **ano inicial** e o **ano final** quando solicitado. O script irá gerar os CNPJs (uma única vez) e, em seguida, os arquivos DIMP, notas fiscais e PGDAS para cada mês do período.
+#### 3.  Insira o **ano inicial** e o **ano final** quando solicitado. O script irá gerar os CNPJs (uma única vez) e, em seguida, os arquivos DIMP, notas fiscais e PGDAS para cada mês do período.
 
 ### Método Manual (Para cenários específicos)
 
